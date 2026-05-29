@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>渐变自适应仪表盘</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 引入飞书官方前端 SDK -->
+    <script src="https://sf3-cn.feishucdn.com/obj/static/lark/passthrough/lark-open-js-sdk-1.3.0.js"></script>
+</head>
+<body>
+    <div class="dashboard-card">
+        <!-- 顶部控制区：允许用户自定义渐变颜色 -->
+        <div class="config-panel">
+            <label>起始色: <input type="color" id="color1" value="#4158D0"></label>
+            <label>结束色: <input type="color" id="color2" value="#C850C0"></label>
+            <label>角度: 
+                <select id="angle">
+                    <option value="45deg">45°</option>
+                    <option value="135deg" selected>135°</option>
+                    <option value="180deg">180°</option>
+                </select>
+            </label>
+        </div>
+
+        <!-- 核心数据展示区 -->
+        <div class="data-container">
+            <h3 class="widget-title">核心生产指标看板</h3>
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <span class="label">今日达成率</span>
+                    <span class="value" id="rate-value">94.5%</span>
+                </div>
+                <div class="metric-item">
+                    <span class="label">实时产出 (件)</span>
+                    <span class="value" id="output-value">1,280</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

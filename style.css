@@ -1,0 +1,90 @@
+/* 全局复位 */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* 插件主外壳：应用动态渐变背景 */
+.dashboard-card {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px;
+    box-sizing: border-box;
+    /* 默认渐变背景：科技蓝紫 */
+    background: linear-gradient(135deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+    transition: background 0.5s ease; /* 颜色切换时平滑过渡 */
+}
+
+/* 配置面板（在仪表盘编辑模式下可见，发布时可隐藏） */
+.config-panel {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    gap: 15px;
+    font-size: 12px;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.config-panel input, .config-panel select {
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* 数据展示区域容器 */
+.data-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.widget-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+/* 数据网格 */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* 毛玻璃质感的指标卡片 */
+.metric-item {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+.metric-item .label {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 8px;
+}
+
+.metric-item .value {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
