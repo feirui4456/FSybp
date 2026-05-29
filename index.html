@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>流光指標卡組件</title>
+    <style>
+        /* ==========================================
+           1. 畫布環境重置（去除網頁邊距，背景設為透明）
+           ========================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: transparent; /* 背景透明，方便嵌入任何地方 */
+            display: inline-block;         /* 讓網頁主體只跟著內容大小走 */
+            overflow: hidden;
+        }
+
+        /* ==========================================
+           2. 流動光圈指標卡核心樣式（340px * 220px）
+           ========================================== */
+        .glow-card-container {
+            position: relative;
+            width: 340px;
+            height: 220px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* 旋轉的極光流體 */
+        .glow-card-container::before {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 140%;
+            background: linear-gradient(#3370ff, #00e5ff);
+            animation: rotateGlow 4s linear infinite;
+        }
+
+        .glow-card-container:hover::before {
+            background: linear-gradient(#ff007f, #00e5ff);
+            animation: rotateGlow 2s linear infinite;
+        }
+
+        /* 內層深色面板 */
+        .card-inner-content {
+            position: absolute;
+            inset: 2px; /* 2px 的流光邊框寬度 */
+            background: #111827; 
+            border-radius: 18px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 2;
+        }
+
+        /* ==========================================
+           3. 內部排版與文字
+           ========================================== */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: #9ca3af;
+            letter-spacing: 0.5px;
+        }
+
+        /* LIVE 閃爍呼吸燈 */
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #00e5ff;
+            background: rgba(0, 229, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #00e5ff;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        .card-body {
+            margin-top: 10px;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .metric-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: -1px;
+        }
+
+        .metric-unit {
+            font-size: 16px;
+            color: #6b7280;
+            margin-left: 6px;
+        }
+
+        .card-footer {
+            font-size: 13px;
+            color: #4b5563;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .trend-up {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        /* ==========================================
+           4. 動態特效 Animation
+           ========================================== */
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.5; box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.7); }
+            70% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 6px rgba(0, 229, 255, 0); }
+            100% { transform: scale(0.8); opacity: 0.5; box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow-card-container">
+        <div class="card-inner-content">
+            <div class="card-header">
+                <span class="card-title">實時自動化生產速率</span>
+                <div class="live-badge">
+                    <span class="pulse-dot"></span>LIVE
+                </div>
+            </div>
+            <div class="card-body">
+                <span class="metric-number" id="dynamicNum" data-target="2845">0</span>
+                <span class="metric-unit">pcs/hr</span>
+            </div>
+            <div class="card-footer">
+                <span class="trend-up">▲ 14.8%</span>
+                <span style="color: #6b7280;">對比昨日同時段</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const numElement = document.getElementById('dynamicNum');
+            const target = parseInt(numElement.getAttribute('data-target'));
+            
+            const duration = 2000; 
+            const stepTime = Math.max(Math.floor(duration / target), 15);
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += Math.ceil(target / (duration / stepTime));
+                if (current >= target) {
+                    numElement.textContent = target.toLocaleString();
+                    clearInterval(timer);
+                    startLiveFluctuation();
+                } else {
+                    numElement.textContent = current.toLocaleString();
+                }
+            }, stepTime);
+
+            function startLiveFluctuation() {
+                setInterval(() => {
+                    let currentNum = parseInt(numElement.textContent.replace(/,/g, ''));
+                    const change = Math.floor(Math.random() * 31) - 15; 
+                    numElement.textContent = (currentNum + change).toLocaleString();
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
